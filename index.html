@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bakugou UI Layout</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8e9dc;
+      overflow-x: hidden;
+    }
+
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Photo Mode Popover Styles */
+    .photo-mode-popover {
+        position: absolute;
+        left: 150px;
+        top: 0;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        width: 200px;
+        z-index: 10;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .photo-mode-popover.active {
+        display: flex;
+      }
+      
+      .photo-mode-popover-title {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: bold;
+        color: #333;
+      }
+      
+      .photo-mode-options {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+      }
+      
+      .photo-mode-option {
+        padding: 8px 15px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #333;
+        font-weight: bold;
+      }
+      
+      .photo-mode-option:hover {
+        background-color: #e0e0e0;
+      }
+      
+      .photo-mode-option.selected {
+        background-color: #ea6d1e;
+        color: white;
+      }
+      
+      /* Animation classes for photo mode */
+      .photo-mode-hidden {
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: opacity 0.5s ease !important;
+      }
+
+    .mini-bg {
+      background-color: #ea6d1e;
+      width: 80%;
+      height: 70vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      overflow: visible;
+      z-index: 1;
+    }
+
+    .title-text {
+      color: white;
+      font-size: 5vw;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      position: absolute;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .carousel {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 80vh;
+      z-index: 3;
+      overflow: visible;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .character {
+      max-height: 80vh;
+      transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, left 0.8s ease;
+      position: absolute;
+      max-width: 25vw; /* Giới hạn chiều rộng tối đa */
+      height: auto;
+      object-fit: contain;
+      transform-origin: bottom center;
+      bottom: 0;
+    }
+    
+    .carousel {
+      position: relative;
+      height: 80vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .character.main {
+      transform: scale(1.2);
+      z-index: 3;
+      left: 50%;
+      transform-origin: bottom center;
+      margin-left: -15%;
+    }
+
+    .character.left {
+      transform: scale(0.84);
+      opacity: 0.7;
+      z-index: 2;
+      left: 25%;
+      transform-origin: bottom center;
+      margin-left: -15%;
+    }
+
+    .character.right {
+      transform: scale(0.84);
+      opacity: 0.7;
+      z-index: 2;
+      left: 75%;
+      transform-origin: bottom center;
+      margin-left: -15%;
+    }
+
+    .nav-btn {
+      position: absolute;
+      bottom: 12vh;
+      width: 60px;
+      height: 60px;
+      background-color: white;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      font-size: 1.5rem;
+      color: #ea6d1e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      z-index: 4;
+    }
+
+    .nav-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .prev-btn {
+      left: 8%;
+    }
+
+    .next-btn {
+      right: 8%;
+    }
+
+    .sidebar {
+      position: absolute;
+      left: 2vw;
+      top: 10vh;
+      color: white;
+      font-size: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 3;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #333333;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 15px;
+    }
+
+    /* Color Theme Popover Styles */
+    .theme-popover {
+      position: absolute;
+      left: 150px;
+      top: 0;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      padding: 15px;
+      width: 200px;
+      z-index: 10;
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .theme-popover.active {
+      display: flex;
+    }
+
+    .theme-popover-title {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .color-option {
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      transform: scale(0);
+      transition: transform 0.2s ease-out;
+    }
+
+    .color-option.animate {
+      transform: scale(1);
+    }
+
+    .close-popover {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .close-popover:hover {
+      color: #000;
+    }
+
+    .top-right {
+      position: absolute;
+      top: 5vh;
+      right: 5vw;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      z-index: 3;
+    }
+
+    .scroll-down {
+      position: absolute;
+      right: 5vw;
+      bottom: 5vh;
+      color: white;
+      font-size: 0.9rem;
+      z-index: 3;
+    }
+
+    @media (max-width: 768px) {
+      .title-text {
+        font-size: 10vw;
+      }
+      .sidebar {
+        left: 5vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero-section">
+    <div class="mini-bg">
+      <div class="title-text">Goddess of Victory: Nikke</div>
+
+      <div class="carousel" id="carousel"></div>
+
+      <button class="nav-btn prev-btn" onclick="prevCharacter()">⟨</button>
+      <button class="nav-btn next-btn" onclick="nextCharacter()">⟩</button>
+    </div>
+
+    <div class="sidebar">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#" id="photo-mode-toggle">Photo Mode</a>
+      <a href="#" id="theme-toggle">Change Theme</a>
+      <div class="theme-popover" id="theme-popover">
+        <div class="theme-popover-title">Choose a color</div>
+        <div class="close-popover" id="close-popover">✕</div>
+      </div>
+      <div class="photo-mode-popover" id="photo-mode-popover">
+        <div class="photo-mode-popover-title">Photo Mode</div>
+        <div class="close-popover" id="close-photo-popover">✕</div>
+        <div class="photo-mode-options">
+          <div class="photo-mode-option" data-mode="off">OFF</div>
+          <div class="photo-mode-option" data-mode="on">ON</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-right">05 |</div>
+    <div class="scroll-down">Scroll Down</div>
+  </section>
+
+  <script>
+    const images = [
+      "assets/images/ecchi-1-removebg-preview.png",
+      "assets/images/ecchi-2-removebg-preview.png",
+      "assets/images/ecchi-3-removebg-preview.png",
+      "assets/images/ecchi-4-removebg-preview.png",
+      "assets/images/ecchi-5-removebg-preview.png",
+      "assets/images/ecchi-6-removebg-preview.png",
+      "assets/images/ecchi-7-removebg-preview.png"
+    ];
+
+    let current = 0;
+    let isAnimating = false;
+
+    function initCarousel() {
+      const carousel = document.getElementById("carousel");
+      carousel.innerHTML = '';
+      
+      // Tạo tất cả các phần tử hình ảnh ngay từ đầu
+      for (let i = 0; i < images.length; i++) {
+        const img = document.createElement('img');
+        img.src = images[i];
+        img.id = `character-${i}`;
+        img.className = 'character';
+        img.alt = `Character ${i+1}`;
+        img.style.display = 'block';
+        img.style.opacity = 0;
+        carousel.appendChild(img);
+      }
+      
+      // Cập nhật vị trí ban đầu
+      updateCarouselPositions();
+    }
+
+    function updateCarouselPositions() {
+      // Đặt lại tất cả các thuộc tính hình ảnh
+      for (let i = 0; i < images.length; i++) {
+        const img = document.getElementById(`character-${i}`);
+        img.className = 'character';
+        img.style.opacity = 0;
+        img.style.pointerEvents = 'none';
+        img.style.zIndex = 0;
+        img.style.display = 'block';
+        img.style.transform = 'scale(0.5)';
+        img.style.left = '50%';
+        img.style.marginLeft = '-15%';
+        img.style.transition = 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, left 0.8s ease';
+      }
+
+      // Hình ảnh chính
+      const mainImg = document.getElementById(`character-${current}`);
+      mainImg.className = 'character main';
+      mainImg.style.opacity = 1;
+      mainImg.style.pointerEvents = 'auto';
+      mainImg.style.zIndex = 3;
+      mainImg.style.transform = 'scale(1.2)';
+      mainImg.style.left = '50%';
+      mainImg.style.marginLeft = '-15%';
+
+      // Hình ảnh bên trái
+      const prevIndex = (current - 1 + images.length) % images.length;
+      const prevImg = document.getElementById(`character-${prevIndex}`);
+      prevImg.className = 'character left';
+      prevImg.style.opacity = 0.7;
+      prevImg.style.pointerEvents = 'auto';
+      prevImg.style.zIndex = 2;
+      prevImg.style.transform = 'scale(0.84)';
+      prevImg.style.left = '20%';
+      prevImg.style.marginLeft = '-15%';
+
+      // Hình ảnh bên phải
+      const nextIndex = (current + 1) % images.length;
+      const nextImg = document.getElementById(`character-${nextIndex}`);
+      nextImg.className = 'character right';
+      nextImg.style.opacity = 0.7;
+      nextImg.style.pointerEvents = 'auto';
+      nextImg.style.zIndex = 2;
+      nextImg.style.transform = 'scale(0.84)';
+      nextImg.style.left = '80%';
+      nextImg.style.marginLeft = '-15%';
+
+      // Ẩn tất cả các hình ảnh khác
+      for (let i = 0; i < images.length; i++) {
+        if (i !== current && i !== prevIndex && i !== nextIndex) {
+          const img = document.getElementById(`character-${i}`);
+          img.style.opacity = 0;
+          img.style.pointerEvents = 'none';
+          img.style.zIndex = 0;
+        }
+      }
+    }
+
+    function nextCharacter() {
+      if (isAnimating) return;
+      isAnimating = true;
+      
+      // Thêm class animation-next cho tất cả các hình ảnh
+      for (let i = 0; i < images.length; i++) {
+        const img = document.getElementById(`character-${i}`);
+        img.style.transition = 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, left 0.8s ease';
+      }
+      
+      current = (current + 1) % images.length;
+      updateCarouselPositions();
+      
+      setTimeout(() => {
+        isAnimating = false;
+      }, 800); // Đồng bộ với thời gian transition
+    }
+
+    function prevCharacter() {
+      if (isAnimating) return;
+      isAnimating = true;
+      
+      // Thêm class animation-prev cho tất cả các hình ảnh
+      for (let i = 0; i < images.length; i++) {
+        const img = document.getElementById(`character-${i}`);
+        img.style.transition = 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, left 0.8s ease';
+      }
+      
+      current = (current - 1 + images.length) % images.length;
+      updateCarouselPositions();
+      
+      setTimeout(() => {
+        isAnimating = false;
+      }, 800); // Đồng bộ với thời gian transition
+    }
+
+    // Khởi tạo carousel khi trang tải xong
+    document.addEventListener('DOMContentLoaded', initCarousel);
+    initCarousel();
+
+    // Photo Mode functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const photoModeToggle = document.getElementById('photo-mode-toggle');
+      const photoModePopover = document.getElementById('photo-mode-popover');
+      const closePhotoPopover = document.getElementById('close-photo-popover');
+      const photoModeOptions = document.querySelectorAll('.photo-mode-option');
+      
+      // Set default selection to OFF
+      photoModeOptions[0].classList.add('selected');
+      
+      // Track photo mode state
+      let photoModeActive = false;
+      
+      // Toggle popover
+      photoModeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        photoModePopover.classList.toggle('active');
+      });
+      
+      // Close popover with X button
+      closePhotoPopover.addEventListener('click', function() {
+        photoModePopover.classList.remove('active');
+      });
+      
+      // Function to update photo mode display
+      function updatePhotoModeDisplay() {
+        if (photoModeActive) {
+          // Get current side characters
+          const leftChar = document.querySelector('.character.left');
+          const rightChar = document.querySelector('.character.right');
+          
+          // Hide side characters
+          if (leftChar) leftChar.classList.add('photo-mode-hidden');
+          if (rightChar) rightChar.classList.add('photo-mode-hidden');
+          
+          // Hide navigation buttons
+          document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.add('photo-mode-hidden');
+          });
+        } else {
+          // Show all characters
+          document.querySelectorAll('.character').forEach(char => {
+            char.classList.remove('photo-mode-hidden');
+          });
+          
+          // Show navigation buttons
+          document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('photo-mode-hidden');
+          });
+        }
+      }
+      
+      // Handle photo mode options
+      photoModeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Remove selected class from all options
+          photoModeOptions.forEach(opt => opt.classList.remove('selected'));
+          
+          // Add selected class to clicked option
+          this.classList.add('selected');
+          
+          // Apply photo mode based on selection
+          photoModeActive = this.dataset.mode === 'on';
+          
+          // Update display
+          updatePhotoModeDisplay();
+          
+          // Close the popover after selection
+          photoModePopover.classList.remove('active');
+        });
+      });
+      
+      // Close popover when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!photoModePopover.contains(e.target) && e.target !== photoModeToggle) {
+          photoModePopover.classList.remove('active');
+        }
+      });
+      
+      // Hook into carousel navigation to update photo mode display after character changes
+      const originalNextCharacter = window.nextCharacter;
+      window.nextCharacter = function() {
+        originalNextCharacter();
+        // Wait for the animation to complete
+        setTimeout(() => {
+          if (photoModeActive) updatePhotoModeDisplay();
+        }, 800);
+      };
+      
+      const originalPrevCharacter = window.prevCharacter;
+      window.prevCharacter = function() {
+        originalPrevCharacter();
+        // Wait for the animation to complete
+        setTimeout(() => {
+          if (photoModeActive) updatePhotoModeDisplay();
+        }, 800);
+      };
+    });
+
+    // Theme color functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const themePopover = document.getElementById('theme-popover');
+      const closePopover = document.getElementById('close-popover');
+      const miniBg = document.querySelector('.mini-bg');
+      
+      // Color options
+      const colors = [
+        '#000000', '#1C1C1C', '#001F3F', '#2C003E', '#013220', '#2E1A12', '#4B0000', '#ea6d1e'
+      ];
+      
+      // Create color options
+      colors.forEach((color, index) => {
+        const colorOption = document.createElement('div');
+        colorOption.className = 'color-option';
+        colorOption.style.backgroundColor = color;
+        colorOption.dataset.color = color;
+        themePopover.appendChild(colorOption);
+        
+        // Add click event to change theme
+        colorOption.addEventListener('click', function() {
+          miniBg.style.transition = 'background-color 0.3s ease';
+          miniBg.style.backgroundColor = color;
+        });
+      });
+      
+      // Toggle popover
+      themeToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        themePopover.classList.toggle('active');
+        
+        if (themePopover.classList.contains('active')) {
+          // Animate color options appearing one after another
+          const colorOptions = document.querySelectorAll('.color-option');
+          colorOptions.forEach((option, index) => {
+            setTimeout(() => {
+              option.classList.add('animate');
+            }, index * 50);
+          });
+        } else {
+          resetColorOptionsAnimation();
+        }
+      });
+      
+      // Close popover with X button
+      closePopover.addEventListener('click', function() {
+        themePopover.classList.remove('active');
+        resetColorOptionsAnimation();
+      });
+      
+      // Close popover when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!themePopover.contains(e.target) && e.target !== themeToggle) {
+          themePopover.classList.remove('active');
+          resetColorOptionsAnimation();
+        }
+      });
+      
+      // Reset animation state of color options
+      function resetColorOptionsAnimation() {
+        const colorOptions = document.querySelectorAll('.color-option');
+        colorOptions.forEach(option => {
+          option.classList.remove('animate');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

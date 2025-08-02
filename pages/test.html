@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="7c948f41cb7319a26a4e623a41fa20e4ccabf5ed" content="7c948f41cb7319a26a4e623a41fa20e4ccabf5ed" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <title>IdolDigits</title>
+    <link rel="stylesheet" href="assets/css/2d-ecchi.css">
+	
+	<!-- Google tag (gtag.js) -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-W9NET4NH9D"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'G-W9NET4NH9D');
+	</script>
+    
+    <!-- Adsterra - Popunder -->
+    <!-- <script type='text/javascript' src='//roomshikinginformal.com/1f/bf/5e/1fbf5edcf5f951abbbe64ff317f82e10.js'></script> -->
+
+</head>
+<body>
+    <!-- Age verification overlay -->
+    <div class="age-verification" id="ageVerification">
+        <div class="age-container">
+            <div class="age-content">
+                <div class="age-title">You Must Be Above 18+</div>
+                <button class="age-button" id="ageConfirmButton">Yes, I'm 18+</button>
+            </div>
+            <div class="age-image" id="ageVerificationImage"></div>
+        </div>
+    </div>
+
+    <!-- Second verification screen -->
+    <div class="age-verification" id="secondVerification" style="display: none;">
+        <div class="age-container">
+            <div class="age-content">
+                <div class="age-title">Trang cung cấp tên Idol và số đo 3 vòng (Có thể sai số)</div>
+                <div class="age-subtitle">Trang có quảng cáo, nhấn vài lần là hết. Đừng cố gắng sống chó. Vì trang cần kinh phí để duy trì !!</div>
+                <button class="age-button" id="secondConfirmButton" onclick="window.open('https://roomshikinginformal.com/y6yijzpk?key=256d56ecd389374938c47ed627f657da', '_blank')">Yes, đã hiểu !! (<span id="countdown">5</span>s)</button>
+            </div>
+            <div class="age-image" id="secondVerificationImage"></div>
+        </div>
+    </div>
+
+    <div class="container content-hidden" id="mainContent">
+        <nav>
+            <a href="https://animemestation.vercel.app/">Home</a>
+            <a href="https://animemestation.vercel.app/pages/truyen-tranh.html">Comics</a>
+            <a href="https://animemestation.vercel.app/pages/meme.html">Meme</a>
+            <a href="https://animemestation.vercel.app/pages/cosplay.html">Cosplay</a>
+            <a href="https://animemestation.vercel.app/pages/3D.html">3D</a>
+        </nav>
+        
+        <div id="content-container">
+            <div class="gallery-title">Trang có quảng cáo, nhấn vài lần là hết !!</div>
+            
+            <div class="masonry-grid" id="gallery">
+                <!-- Images will be loaded here via JavaScript -->
+            </div>
+            
+            <!-- Skeleton loading container -->
+            <div class="skeleton-container" id="skeletonContainer">
+                <div class="skeleton-grid" id="skeletonGrid">
+                    <!-- Skeleton items will be added here -->
+                </div>
+            </div>
+            
+            <div class="loading-spinner" id="loadingSpinner"></div>
+            <div class="banner-ads-container" id="bannerAdsContainer">
+                <!-- Banner ads will be loaded here -->
+            </div>
+            
+            <div class="load-more-text" id="loadMoreText">Hết rồi ! Nhưng sẽ cập nhật thêm sớm thôi</div>
+            <button class="load-more-button" id="loadMoreButton">Load More</button>
+        </div>
+    </div>
+
+    <!-- Scripts will be loaded after delay -->
+    <!-- <div id="delayedScripts1"></div>
+    <div id="delayedScripts2"></div> -->
+    
+    <button class="back-to-top" id="backToTop">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+        Up Top
+    </button>
+    
+    <!-- Ad Popup -->
+    <div class="popup-overlay" id="adPopup">
+        <div class="popup-container">
+            <div class="popup-title">Nhấn vào quảng cáo<br>bất kỳ để đóng cửa sổ này !!</div>
+            <div class="ads-container" id="adsContainer">
+                <script async="async" data-cfasync="false" src="//roomshikinginformal.com/3ae6c0d9a256601494e75c3dde43528a/invoke.js"></script>
+                <div id="container-3ae6c0d9a256601494e75c3dde43528a"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Age verification functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const ageVerification = document.getElementById('ageVerification');
+            const secondVerification = document.getElementById('secondVerification');
+            const mainContent = document.getElementById('mainContent');
+            const ageConfirmButton = document.getElementById('ageConfirmButton');
+            const secondConfirmButton = document.getElementById('secondConfirmButton');
+            const ageVerificationImage = document.getElementById('ageVerificationImage');
+            const secondVerificationImage = document.getElementById('secondVerificationImage');
+            const countdownElement = document.getElementById('countdown');
+            
+            // Set random welcome image (1-9)
+            const randomImageNumber = Math.floor(Math.random() * 9) + 1;
+            ageVerificationImage.style.backgroundImage = `url('assets/welcome_${randomImageNumber}.webp')`;
+            secondVerificationImage.style.backgroundImage = `url('assets/welcome_${randomImageNumber}.webp')`;
+            
+            // Remove localStorage check - always show verification screens
+            
+            // Handle first age confirmation
+            ageConfirmButton.addEventListener('click', function() {
+                // Hide first verification and show second verification
+                ageVerification.style.animation = 'fadeOut 0.5s ease-in-out forwards';
+                
+                setTimeout(() => {
+                    ageVerification.style.display = 'none';
+                    secondVerification.style.display = 'flex'; // Changed from 'block' to 'flex' for proper centering
+                    secondVerification.style.animation = 'fadeIn 0.5s ease-in-out forwards';
+                    
+                    // Start countdown
+                    let countdown = 3;
+                    countdownElement.textContent = countdown;
+                    secondConfirmButton.disabled = true;
+                    
+                    const countdownInterval = setInterval(() => {
+                        countdown--;
+                        countdownElement.textContent = countdown;
+                        
+                        if (countdown <= 0) {
+                            clearInterval(countdownInterval);
+                            secondConfirmButton.disabled = false;
+                        }
+                    }, 1000);
+                }, 500);
+            });
+            
+            // Handle second confirmation
+            secondConfirmButton.addEventListener('click', function() {
+                if (this.disabled) return;
+                
+                // Set animation for hiding verification
+                secondVerification.style.animation = 'fadeOut 0.5s ease-in-out forwards';
+                
+                // After animation completes, hide verification and show content
+                setTimeout(() => {
+                    secondVerification.style.display = 'none';
+                    mainContent.classList.remove('content-hidden');
+                    mainContent.classList.add('content-visible');
+                    
+                    // Removed localStorage.setItem line
+                }, 500);
+            });
+            
+            // Back to top button functionality
+            const backToTopBtn = document.getElementById('backToTop');
+            
+            // Show back-to-top button when scrolling down
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+            
+            // Scroll to top when button is clicked
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Your existing JavaScript code below
+        // Gallery elements
+        const gallery = document.getElementById('gallery');
+        const loadMoreText = document.getElementById('loadMoreText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const backToTopBtn = document.getElementById('backToTop');
+        const adPopup = document.getElementById('adPopup');
+        const skeletonContainer = document.getElementById('skeletonContainer');
+        const skeletonGrid = document.getElementById('skeletonGrid');
+        
+        // Initial load and lazy loading variables
+        const initialLoad = 35;
+        const loadMoreCount = 25;
+        let currentlyLoaded = 0;
+        let allImages = [];
+        let isLoading = false;
+        let loadMoreCounter = 0; // Counter for tracking load more operations
+        let loadMoreClickCount = 0; // Counter for tracking load more button clicks
+        
+        // Function to generate skeleton loading elements
+        function generateSkeletons(count) {
+            skeletonGrid.innerHTML = ''; // Clear existing skeletons
+            
+            // Create random heights for skeleton items
+            const heights = [180, 200, 220, 240, 260, 280, 300, 320, 340];
+            
+            for (let i = 0; i < count; i++) {
+                const skeletonItem = document.createElement('div');
+                skeletonItem.className = 'skeleton-item';
+                // Set random height for more realistic appearance
+                const randomHeight = heights[Math.floor(Math.random() * heights.length)];
+                skeletonItem.style.height = `${randomHeight}px`;
+                skeletonGrid.appendChild(skeletonItem);
+            }
+            
+            // Show skeleton container
+            skeletonContainer.style.display = 'block';
+        }
+        
+        // Function to hide skeleton loading
+        function hideSkeletons() {
+            skeletonContainer.style.display = 'none';
+        }
+        
+        // Function to check if an image exists
+        function imageExists(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        }
+        
+        // Function to fetch all images from the directory
+        async function fetchImageList() {
+            try {
+                console.log("Fetching images from manifest...");
+                
+                // Fetch the manifest file
+                const response = await fetch('assets/images/manifest.json');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch manifest file');
+                }
+                
+                const manifest = await response.json();
+                console.log(`Loaded ${manifest.totalCount} images from manifest`);
+                
+                // Map the image paths to our image objects
+                const images = manifest.images.map((path, index) => {
+                    return {
+                        id: manifest.totalCount - index, // Maintain the same ID order as before
+                        src: path,
+                        alt: `Cosplay Image ${manifest.totalCount - index}`
+                    };
+                });
+                
+                return images;
+            } catch (error) {
+                console.error('Error fetching images from manifest:', error);
+                
+                // Fallback to the old method if manifest loading fails
+                console.log("Falling back to direct image checking...");
+                const directoryPath = 'assets/images/';
+                const images = [];
+                const totalToCheck = 338; // Total Check Images
+                
+                for (let i = 1; i <= totalToCheck; i++) {
+                    const imgPath = `${directoryPath}ecchi-${i}.webp`;
+                    images.push({
+                        id: i,
+                        src: imgPath,
+                        alt: `Ecchi Image ${i}`
+                    });
+                }
+                
+                return images;
+            }
+        }
+        
+        // Function to shuffle array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Function to load images
+        function loadImages(count) {
+            if (isLoading) return;
+            isLoading = true;
+            
+            // Show skeleton loading instead of spinner
+            loadingSpinner.style.display = 'none';
+            generateSkeletons(count);
+            
+            // Set a minimum loading time for aesthetics (at least 800ms)
+            const loadStartTime = Date.now();
+            
+            const fragment = document.createDocumentFragment();
+            const endIndex = Math.min(currentlyLoaded + count, allImages.length);
+            
+            for (let i = currentlyLoaded; i < endIndex; i++) {
+                const image = allImages[i];
+                const item = document.createElement('div');
+                item.className = 'masonry-item';
+                item.style.animationDelay = `${(i - currentlyLoaded) * 0.05}s`;
+                
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = image.alt;
+                img.loading = 'lazy'; // Use browser's native lazy loading
+                
+                // Add error handling for images
+                img.onerror = function() {
+                    console.log(`Image failed to load: ${img.src}`);
+                    item.remove(); // Remove the item if image fails to load
+                };
+                
+                item.appendChild(img);
+                fragment.appendChild(item);
+            }
+            
+            // Ensure skeleton is shown for a minimum time
+            const loadTime = Date.now() - loadStartTime;
+            const minLoadTime = 800; // 800ms minimum loading time
+            
+            setTimeout(() => {
+                // Hide skeleton loading
+                // Hide skeleton loading
+                hideSkeletons();
+                
+                // Append actual images
+                gallery.appendChild(fragment);
+                currentlyLoaded = endIndex;
+                
+                // Show "No more images" text if all images are loaded
+                if (currentlyLoaded >= allImages.length) {
+                    loadMoreText.style.display = 'block';
+                    document.getElementById('loadMoreButton').style.display = 'none';
+                } else {
+                    // FIX: Make sure the button is visible if there are more images to load
+                    document.getElementById('loadMoreButton').style.display = 'block';
+                }
+                
+                // Check if any images were displayed
+                if (gallery.children.length === 0 && currentlyLoaded >= allImages.length) {
+                    loadMoreText.textContent = 'Không tìm thấy hình ảnh';
+                }
+                
+                // Load banner ad after each batch
+                loadBannerAd();
+                
+                // Increment load more counter
+                loadMoreCounter++;
+                
+                // Show popup ads at specific load more counts (keep this functionality)
+                if (loadMoreCounter === 5) {
+                    showAdPopup();
+                }
+                
+                isLoading = false;
+            }, Math.max(0, minLoadTime - loadTime));
+        }
+
+        // Initialize the gallery
+        async function initGallery() {
+            // Show loading spinner for initial load
+            loadingSpinner.style.display = 'block';
+            
+            // Show initial skeleton loading
+            generateSkeletons(initialLoad);
+            
+            // Fetch all images
+            const images = await fetchImageList();
+            
+            // Hide initial skeleton and spinner
+            hideSkeletons();
+            loadingSpinner.style.display = 'none';
+            
+            if (images.length === 0) {
+                loadMoreText.textContent = 'Không tìm thấy hình ảnh';
+                loadMoreText.style.display = 'block';
+                return;
+            }
+            
+            // Shuffle and store the images
+            allImages = shuffleArray([...images]);
+            
+            // Load initial batch
+            loadImages(initialLoad);
+            
+            // Show popup after xx seconds
+            setTimeout(showAdPopup, 60000);
+            
+            // Show the load more button after initial load - FIX: Make sure this executes
+            const loadMoreButton = document.getElementById('loadMoreButton');
+            if (loadMoreButton) {
+                loadMoreButton.style.display = 'block';
+                console.log('Load more button should be visible now');
+            } else {
+                console.error('Load more button element not found');
+            }
+        }
+        
+        // Create lightbox elements
+        const lightbox = document.createElement('div');
+        lightbox.id = 'lightbox';
+        lightbox.className = 'lightbox';
+        document.body.appendChild(lightbox);
+        
+        const lightboxContent = document.createElement('div');
+        lightboxContent.className = 'lightbox-content';
+        lightbox.appendChild(lightboxContent);
+        
+
+        // Add close button before the image
+        const closeButton = document.createElement('div');
+        closeButton.className = 'lightbox-close';
+        closeButton.innerHTML = '&times;';
+        lightboxContent.appendChild(closeButton);
+        
+        // Add image after the close button
+        const lightboxImage = document.createElement('img');
+        lightboxContent.appendChild(lightboxImage);
+        
+        const prevButton = document.createElement('div');
+        prevButton.className = 'lightbox-nav lightbox-prev';
+        prevButton.innerHTML = '&#10094;';
+        lightbox.appendChild(prevButton);
+        
+        const nextButton = document.createElement('div');
+        nextButton.className = 'lightbox-nav lightbox-next';
+        nextButton.innerHTML = '&#10095;';
+        lightbox.appendChild(nextButton);
+        
+        // Create toast notification
+        const toastNotification = document.createElement('div');
+        toastNotification.className = 'toast-notification';
+        toastNotification.innerHTML = `
+            <p>Hãy tắt hình ảnh và nhấn tải thêm</p>
+            <p>Close image and click load more</p>
+        `;
+        document.body.appendChild(toastNotification);
+        
+        // Variables to track current image
+        let currentImageIndex = 0;
+        
+        // Function to show toast notification
+        function showToastNotification() {
+            toastNotification.classList.add('show');
+            
+            // Hide after 10 seconds
+            setTimeout(() => {
+                toastNotification.classList.remove('show');
+            }, 10000);
+        }
+        
+        // Function to open lightbox
+        function openLightbox(imageSrc, index) {
+            lightboxImage.src = imageSrc;
+            currentImageIndex = index;
+            lightbox.style.display = 'flex';
+            
+            setTimeout(() => {
+                lightbox.classList.add('show');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when lightbox is open
+        }
+        
+        // Function to close lightbox
+        function closeLightbox() {
+            lightbox.classList.remove('show');
+            setTimeout(() => {
+                lightbox.style.display = 'none';
+                document.body.style.overflow = ''; // Restore scrolling
+            }, 300);
+        }
+        
+        // Function to navigate to previous image
+        function showPreviousImage() {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                lightboxImage.src = allImages[currentImageIndex].src;
+                // Remove this line to prevent reloading the ad on navigation
+                // loadLightboxAd();
+            }
+        }
+        
+        // Function to navigate to next image
+        function showNextImage() {
+            if (currentImageIndex < currentlyLoaded - 1) {
+                currentImageIndex++;
+                lightboxImage.src = allImages[currentImageIndex].src;
+                // Remove this line to prevent reloading the ad on navigation
+                // loadLightboxAd();
+                
+                // Show toast notification if we're at the last loaded image
+                if (currentImageIndex === currentlyLoaded - 1 && currentlyLoaded < allImages.length) {
+                    showToastNotification();
+                }
+            }
+        }
+
+        // Call the init function to load the gallery
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize gallery after DOM is loaded
+            initGallery();
+            
+            // Set up click handlers for popup
+            adPopup.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closePopup();
+                }
+            });
+            
+            // Prevent clicks on the popup container from closing it
+            // unless they're on an ad container
+            const popupContainer = document.querySelector('.popup-container');
+            popupContainer.addEventListener('click', function(e) {
+                if (!e.target.closest('.ad-container')) {
+                    e.stopPropagation();
+                }
+            });
+            
+            // Add click event for load more button
+            const loadMoreButton = document.getElementById('loadMoreButton');
+            loadMoreButton.addEventListener('click', function() {
+                if (currentlyLoaded < allImages.length && !isLoading) {
+                    // Increment click counter
+                    loadMoreClickCount++;
+                    
+                    // Open ad link in new tab on 1st and 4th clicks
+                    if (loadMoreClickCount === 1 || loadMoreClickCount === 4 || loadMoreClickCount === 7) {
+                        window.open('https://roomshikinginformal.com/y6yijzpk?key=256d56ecd389374938c47ed627f657da', '_blank');
+                    }
+                    
+                    // Use the handleLoadMoreWithCountdown function from app.js
+                    handleLoadMoreWithCountdown(function() {
+                        loadImages(loadMoreCount);
+                        
+                        // Increment load more counter
+                        loadMoreCounter++;
+                        
+                        // Show ads at specific load more counts
+                        if (loadMoreCounter === 9) {
+                            showAdPopup();
+                        }
+                        
+                        // Hide button if all images are loaded
+                        if (currentlyLoaded >= allImages.length) {
+                            loadMoreButton.style.display = 'none';
+                        }
+                    });
+                }
+            });
+            
+            // Add click event for gallery images to open lightbox
+            gallery.addEventListener('click', function(e) {
+                const clickedItem = e.target.closest('.masonry-item');
+                if (clickedItem && e.target.tagName === 'IMG') {
+                    // Find the index of the clicked image
+                    const allItems = Array.from(gallery.querySelectorAll('.masonry-item img'));
+                    const clickedIndex = allItems.indexOf(e.target);
+                    openLightbox(e.target.src, clickedIndex);
+                }
+            });
+            
+            // Add click events for lightbox closing
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeLightbox();
+                }
+            });
+            
+            closeButton.addEventListener('click', closeLightbox);
+            
+            // Add click events for navigation buttons
+            prevButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showPreviousImage();
+            });
+            
+            nextButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showNextImage();
+            });
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (lightbox.classList.contains('show')) {
+                    if (e.key === 'ArrowLeft') {
+                        showPreviousImage();
+                    } else if (e.key === 'ArrowRight') {
+                        showNextImage();
+                    } else if (e.key === 'Escape') {
+                        closeLightbox();
+                    }
+                }
+            });
+            
+            // Load delayed scripts
+            // loadDelayedScripts();
+        });
+    </script>
+    
+    <!-- Load app.js for ad-related functionality -->
+    <script src="app.js"></script>
+
+    <!-- Adsterra - Social bar -->
+    <script type='text/javascript' src='//roomshikinginformal.com/bc/13/06/bc13067c3deb899990780e438bcdc4ed.js'></script>
+</body>
+</html>
