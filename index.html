@@ -15,6 +15,7 @@
 
       <button class="nav-btn prev-btn" onclick="prevCharacter()">⟨</button>
       <button class="nav-btn next-btn" onclick="nextCharacter()">⟩</button>
+      <button class="send-nude-btn" id="send-nude-btn">Send Nude</button>
     </div>
 
     <div class="sidebar">
@@ -37,7 +38,6 @@
     </div>
 
     <div class="top-right">05 |</div>
-    <div class="scroll-down">Scroll Down</div>
   </section>
 
   <script>
@@ -51,14 +51,21 @@
       "assets/images/ecchi-7-removebg-preview.png"
     ];
 
+    // Create nude versions of the images by adding _nude before the extension
+    const nudeImages = images.map(img => {
+      const dotIndex = img.lastIndexOf('.');
+      return img.substring(0, dotIndex) + '_nude' + img.substring(dotIndex);
+    });
+
     let current = 0;
     let isAnimating = false;
+    let isNudeMode = false;
 
     function initCarousel() {
       const carousel = document.getElementById("carousel");
       carousel.innerHTML = '';
       
-      // Tạo tất cả các phần tử hình ảnh ngay từ đầu
+      // Create all image elements from the start
       for (let i = 0; i < images.length; i++) {
         const img = document.createElement('img');
         img.src = images[i];
@@ -70,7 +77,7 @@
         carousel.appendChild(img);
       }
       
-      // Cập nhật vị trí ban đầu
+      // Update initial positions
       updateCarouselPositions();
     }
 
@@ -345,6 +352,80 @@
         });
       }
     });
+    // Add event listener for the Send Nude button
+    document.addEventListener('DOMContentLoaded', function() {
+      const sendNudeBtn = document.getElementById('send-nude-btn');
+      if (sendNudeBtn) {
+        sendNudeBtn.addEventListener('click', toggleNudeMode);
+      }
+    });
+
+    function toggleNudeMode() {
+      if (isAnimating) return;
+      isAnimating = true;
+      
+      // Get the current main character image
+      const mainImg = document.getElementById(`character-${current}`);
+      
+      // Toggle nude mode for the current character only
+      isNudeMode = !isNudeMode;
+      
+      if (isNudeMode) {
+        // Start flip-in animation
+        mainImg.classList.add('flipping', 'flip-in');
+        
+        // Change the image source at the middle of the animation (when card is perpendicular to screen)
+        setTimeout(() => {
+          mainImg.src = nudeImages[current];
+        }, 400); // Half of the animation duration
+        
+        // Remove animation classes when complete
+        setTimeout(() => {
+          mainImg.classList.remove('flipping', 'flip-in');
+          isAnimating = false;
+        }, 800); // Full animation duration
+      } else {
+        // Start flip-out animation
+        mainImg.classList.add('flipping', 'flip-out');
+        
+        // Change the image source at the middle of the animation
+        setTimeout(() => {
+          mainImg.src = images[current];
+        }, 400); // Half of the animation duration
+        
+        // Remove animation classes when complete
+        setTimeout(() => {
+          mainImg.classList.remove('flipping', 'flip-out');
+          isAnimating = false;
+        }, 800); // Full animation duration
+      }
+    }
+
+    // Modify the nextCharacter and prevCharacter functions to reset nude mode
+    const originalNextCharacter = nextCharacter;
+    window.nextCharacter = function() {
+      // Reset to normal image if in nude mode
+      if (isNudeMode) {
+        const mainImg = document.getElementById(`character-${current}`);
+        mainImg.classList.remove('flipping', 'flip-in', 'flip-out');
+        mainImg.src = images[current];
+        isNudeMode = false;
+      }
+      originalNextCharacter();
+    };
+
+    const originalPrevCharacter = prevCharacter;
+    window.prevCharacter = function() {
+      // Reset to normal image if in nude mode
+      if (isNudeMode) {
+        const mainImg = document.getElementById(`character-${current}`);
+        mainImg.classList.remove('flipping', 'flip-in', 'flip-out');
+        mainImg.src = images[current];
+        isNudeMode = false;
+      }
+      originalPrevCharacter();
+    };
+
   </script>
 </body>
 </html>
