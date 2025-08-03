@@ -218,6 +218,10 @@
           document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.classList.add('photo-mode-hidden');
           });
+          
+          // Hide Send Nude button
+          const sendNudeBtn = document.getElementById('send-nude-btn');
+          if (sendNudeBtn) sendNudeBtn.classList.add('photo-mode-hidden');
         } else {
           // Show all characters
           document.querySelectorAll('.character').forEach(char => {
@@ -228,6 +232,10 @@
           document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.classList.remove('photo-mode-hidden');
           });
+          
+          // Show Send Nude button
+          const sendNudeBtn = document.getElementById('send-nude-btn');
+          if (sendNudeBtn) sendNudeBtn.classList.remove('photo-mode-hidden');
         }
       }
       
