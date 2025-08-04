@@ -317,12 +317,108 @@ body {
   z-index: 3;
 }
 
+/* Responsive styles */
 @media (max-width: 768px) {
   .title-text {
-    font-size: 10vw;
+    font-size: 8vw;
+    top: 5vh;
   }
+  
   .sidebar {
     left: 5vw;
+  }
+  
+  /* Ensure carousel remains centered */
+  .carousel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  /* Adjust character positioning */
+  .character {
+    max-width: 40vw;
+  }
+  
+  .character.main {
+    transform: scale(1.1);
+    left: 50%;
+    margin-left: -25%; /* Updated as requested */
+  }
+  
+  .character.left {
+    transform: scale(0.7);
+    left: 25%;
+    margin-left: -30%; /* Updated as requested */
+  }
+  
+  .character.right {
+    transform: scale(0.7);
+    left: 75%;
+    margin-left: -35%; /* Updated as requested */
+  }
+  
+  .nav-btn {
+    width: 40px;
+    height: 40px;
+    bottom: 15vh;
+  }
+  
+  .prev-btn {
+    left: 5%;
+  }
+  
+  .next-btn {
+    right: 5%;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .mini-bg {
+    width: 95%;
+    height: 65vh;
+  }
+  
+  /* Ensure characters remain centered and properly positioned */
+  .character {
+    max-width: 50vw;
+  }
+  
+  .character.main {
+    transform: scale(1);
+    left: 50%;
+    margin-left: -25%; /* Updated as requested */
+  }
+  
+  .character.left {
+    transform: scale(0.6);
+    left: 25%;
+    margin-left: -30%; /* Updated as requested */
+    opacity: 0.6;
+  }
+  
+  .character.right {
+    transform: scale(0.6);
+    left: 75%;
+    margin-left: -35%; /* Updated as requested */
+    opacity: 0.6;
+  }
+  
+  /* Adjust navigation buttons for better mobile experience */
+  .nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+    bottom: 10vh;
+  }
+  
+  /* Keep the send nude button properly positioned */
+  .send-nude-btn {
+    bottom: 3vh;
   }
 }
 
@@ -460,4 +556,112 @@ body {
 
 .highlight-red {
   color: #e74c3c;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .title-text {
+    font-size: 8vw;
+    top: 5vh;
+  }
+  
+  .sidebar {
+    left: 5vw;
+  }
+  
+  .character {
+    max-width: 40vw;
+  }
+  
+  .character.main {
+    transform: scale(1.1);
+    left: 50%;
+    margin-left: -15%;
+  }
+  
+  .character.left {
+    transform: scale(0.7);
+    left: 25%;
+    margin-left: -15%;
+  }
+  
+  .character.right {
+    transform: scale(0.7);
+    left: 75%;
+    margin-left: -15%;
+  }
+  
+  .nav-btn {
+    width: 40px;
+    height: 40px;
+    bottom: 15vh;
+  }
+  
+  .prev-btn {
+    left: 5%;
+  }
+  
+  .next-btn {
+    right: 5%;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .mini-bg {
+    width: 90%;
+    height: 60vh;
+  }
+  
+  .title-text {
+    font-size: 7vw;
+    top: 3vh;
+  }
+  
+  .character {
+    max-width: 60vw;
+  }
+  
+  .character.main {
+    transform: scale(1);
+  }
+  
+  .character.left {
+    transform: scale(0.6);
+    left: 15%;
+  }
+  
+  .character.right {
+    transform: scale(0.6);
+    left: 85%;
+  }
+  
+  /* Ensure the carousel is properly centered */
+  .carousel {
+    width: 100%;
+    left: 0;
+    right: 0;
+  }
+  
+  /* Adjust navigation buttons */
+  .nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+  
+  /* Ensure the send nude button stays visible */
+  .send-nude-btn {
+    bottom: 3vh;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust popovers for mobile */
+  .theme-popover,
+  .photo-mode-popover,
+  .about-popover {
+    left: 100px;
+    width: 180px;
+  }
 }

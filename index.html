@@ -169,7 +169,10 @@
         img.style.marginLeft = '-15%';
         img.style.transition = 'transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, left 0.8s ease';
       }
-
+    
+      // Check if we're on mobile
+      const isMobile = window.innerWidth <= 768;
+    
       // Hình ảnh chính
       const mainImg = document.getElementById(`character-${current}`);
       mainImg.className = 'character main';
@@ -178,8 +181,8 @@
       mainImg.style.zIndex = 3;
       mainImg.style.transform = 'scale(1.2)';
       mainImg.style.left = '50%';
-      mainImg.style.marginLeft = '-15%';
-
+      mainImg.style.marginLeft = isMobile ? '-30%' : '-15%';
+    
       // Hình ảnh bên trái
       const prevIndex = (current - 1 + images.length) % images.length;
       const prevImg = document.getElementById(`character-${prevIndex}`);
@@ -189,8 +192,8 @@
       prevImg.style.zIndex = 2;
       prevImg.style.transform = 'scale(0.84)';
       prevImg.style.left = '20%';
-      prevImg.style.marginLeft = '-15%';
-
+      prevImg.style.marginLeft = isMobile ? '-25%' : '-15%';
+    
       // Hình ảnh bên phải
       const nextIndex = (current + 1) % images.length;
       const nextImg = document.getElementById(`character-${nextIndex}`);
@@ -200,8 +203,8 @@
       nextImg.style.zIndex = 2;
       nextImg.style.transform = 'scale(0.84)';
       nextImg.style.left = '80%';
-      nextImg.style.marginLeft = '-15%';
-
+      nextImg.style.marginLeft = isMobile ? '-40%' : '-15%';
+    
       // Ẩn tất cả các hình ảnh khác
       for (let i = 0; i < images.length; i++) {
         if (i !== current && i !== prevIndex && i !== nextIndex) {
@@ -473,6 +476,10 @@
           option.classList.remove('animate');
         });
       }
+    });
+    // Add this after the initCarousel function
+    window.addEventListener('resize', function() {
+      updateCarouselPositions();
     });
     // Add event listener for the Send Nude button
     document.addEventListener('DOMContentLoaded', function() {
