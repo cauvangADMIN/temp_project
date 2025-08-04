@@ -302,7 +302,7 @@ body {
   position: absolute;
   top: 5vh;
   right: 5vw;
-  color: white;
+  color: rgb(7, 7, 7);
   font-weight: bold;
   font-size: 1rem;
   z-index: 3;
@@ -396,4 +396,68 @@ body {
   0% { transform: rotateY(0deg) scale(1.2); }
   50% { transform: rotateY(90deg) scale(1.2); }
   100% { transform: rotateY(0deg) scale(1.2); }
+}
+
+/* Blocked Popover Styles */
+.blocked-popover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 300px;
+  z-index: 100;
+  display: none;
+}
+
+.blocked-popover.active {
+  display: block;
+}
+
+.blocked-message {
+  text-align: center;
+  margin-top: 10px;
+  color: #333;
+  font-weight: bold;
+}
+
+/* About Popover Styles */
+.about-popover {
+  position: absolute;
+  left: 150px;
+  top: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  width: 250px;
+  z-index: 10;
+  display: none;
+}
+
+.about-popover.active {
+  display: block;
+}
+
+.about-content {
+  color: #333;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.about-message {
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Highlight styles for about popover */
+.highlight-green {
+  color: #2ecc71;
+}
+
+.highlight-red {
+  color: #e74c3c;
 }

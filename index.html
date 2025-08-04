@@ -19,8 +19,14 @@
     </div>
 
     <div class="sidebar">
-      <a href="#">Home</a>
-      <a href="#">About</a>
+      <a href="index.html">Home</a>
+      <a href="#" id="about-toggle">About</a>
+      <div class="about-popover" id="about-popover">
+        <div class="close-popover" id="close-about-popover">✕</div>
+        <div class="about-content">
+          This website is <span class="highlight-green"><strong>completely free</strong></span> for exploring and capturing your own wallpapers using <span class="highlight-green"><strong>Photo Mode</strong></span>. However, it does <span class="highlight-red"><strong>include ads to help us maintain the site</strong></span>. We hope you enjoy your experience here, and kindly keep things respectful.
+        </div>
+      </div>
       <a href="#" id="photo-mode-toggle">Photo Mode</a>
       <a href="#" id="theme-toggle">Change Theme</a>
       <div class="theme-popover" id="theme-popover">
@@ -37,7 +43,7 @@
       </div>
     </div>
 
-    <div class="top-right">05 |</div>
+    <div class="top-right">Watched characters: 0</div>
   </section>
 
   <script>
@@ -60,6 +66,71 @@
     let current = 0;
     let isAnimating = false;
     let isNudeMode = false;
+    
+    // Track watched characters
+    let watchedCharacters = new Set();
+    const REQUIRED_CHARACTERS = 7;
+    
+    // Update the watched characters counter
+    function updateWatchedCounter() {
+      const counterElement = document.querySelector('.top-right');
+      counterElement.textContent = `Watched characters: ${watchedCharacters.size}`;
+    }
+    
+    // Check if a character has been watched and update counter
+    function markCharacterAsWatched(characterIndex) {
+      if (!watchedCharacters.has(characterIndex)) {
+        watchedCharacters.add(characterIndex);
+        updateWatchedCounter();
+      }
+    }
+    
+    // Create popover for blocked nude button
+    function createBlockedPopover() {
+      // Check if popover already exists
+      if (document.getElementById('blocked-popover')) return;
+      
+      const popover = document.createElement('div');
+      popover.id = 'blocked-popover';
+      popover.className = 'blocked-popover';
+      
+      const closeBtn = document.createElement('div');
+      closeBtn.className = 'close-popover';
+      closeBtn.textContent = '✕';
+      closeBtn.addEventListener('click', function() {
+        popover.classList.remove('active');
+      });
+      
+      const message = document.createElement('div');
+      message.className = 'blocked-message';
+      message.textContent = 'You must watch at least 7 characters to unlock this';
+      
+      popover.appendChild(closeBtn);
+      popover.appendChild(message);
+      
+      document.body.appendChild(popover);
+      
+      // Close popover when clicking outside
+      document.addEventListener('click', function(e) {
+        const popover = document.getElementById('blocked-popover');
+        if (popover && popover.classList.contains('active') && 
+            !popover.contains(e.target) && 
+            e.target !== document.getElementById('send-nude-btn')) {
+          popover.classList.remove('active');
+        }
+      });
+      
+      return popover;
+    }
+    
+    // Show blocked popover
+    function showBlockedPopover() {
+      let popover = document.getElementById('blocked-popover');
+      if (!popover) {
+        popover = createBlockedPopover();
+      }
+      popover.classList.add('active');
+    }
 
     function initCarousel() {
       const carousel = document.getElementById("carousel");
@@ -79,6 +150,9 @@
       
       // Update initial positions
       updateCarouselPositions();
+      
+      // Initialize watched counter
+      updateWatchedCounter();
     }
 
     function updateCarouselPositions() {
@@ -152,6 +226,9 @@
       current = (current + 1) % images.length;
       updateCarouselPositions();
       
+      // Mark the new current character as watched
+      markCharacterAsWatched(current);
+      
       setTimeout(() => {
         isAnimating = false;
       }, 800); // Đồng bộ với thời gian transition
@@ -169,6 +246,9 @@
       
       current = (current - 1 + images.length) % images.length;
       updateCarouselPositions();
+      
+      // Mark the new current character as watched
+      markCharacterAsWatched(current);
       
       setTimeout(() => {
         isAnimating = false;
@@ -222,6 +302,10 @@
           // Hide Send Nude button
           const sendNudeBtn = document.getElementById('send-nude-btn');
           if (sendNudeBtn) sendNudeBtn.classList.add('photo-mode-hidden');
+          
+          // Hide Watched characters counter
+          const watchedCounter = document.querySelector('.top-right');
+          if (watchedCounter) watchedCounter.classList.add('photo-mode-hidden');
         } else {
           // Show all characters
           document.querySelectorAll('.character').forEach(char => {
@@ -236,6 +320,10 @@
           // Show Send Nude button
           const sendNudeBtn = document.getElementById('send-nude-btn');
           if (sendNudeBtn) sendNudeBtn.classList.remove('photo-mode-hidden');
+          
+          // Show Watched characters counter
+          const watchedCounter = document.querySelector('.top-right');
+          if (watchedCounter) watchedCounter.classList.remove('photo-mode-hidden');
         }
       }
       
@@ -292,6 +380,32 @@
         }, 800);
       };
     });
+
+    // About popover functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const aboutToggle = document.getElementById('about-toggle');
+      const aboutPopover = document.getElementById('about-popover');
+      const closeAboutPopover = document.getElementById('close-about-popover');
+      
+      // Toggle popover
+      aboutToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        aboutPopover.classList.toggle('active');
+      });
+      
+      // Close popover with X button
+      closeAboutPopover.addEventListener('click', function() {
+        aboutPopover.classList.remove('active');
+      });
+      
+      // Close popover when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!aboutPopover.contains(e.target) && e.target !== aboutToggle) {
+          aboutPopover.classList.remove('active');
+        }
+      });
+    });
+
 
     // Theme color functionality
     document.addEventListener('DOMContentLoaded', function() {
@@ -364,8 +478,20 @@
     document.addEventListener('DOMContentLoaded', function() {
       const sendNudeBtn = document.getElementById('send-nude-btn');
       if (sendNudeBtn) {
-        sendNudeBtn.addEventListener('click', toggleNudeMode);
+        sendNudeBtn.addEventListener('click', function() {
+          if (watchedCharacters.size >= REQUIRED_CHARACTERS) {
+            toggleNudeMode();
+          } else {
+            showBlockedPopover();
+          }
+        });
       }
+      
+      // Initialize the counter
+      updateWatchedCounter();
+      
+      // Mark the initial character as watched
+      markCharacterAsWatched(current);
     });
 
     function toggleNudeMode() {
@@ -437,3 +563,5 @@
   </script>
 </body>
 </html>
+
+
