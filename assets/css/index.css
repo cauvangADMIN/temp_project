@@ -308,15 +308,6 @@ body {
   z-index: 3;
 }
 
-.scroll-down {
-  position: absolute;
-  right: 5vw;
-  bottom: 5vh;
-  color: white;
-  font-size: 0.9rem;
-  z-index: 3;
-}
-
 /* Responsive styles */
 @media (max-width: 768px) {
   .title-text {
@@ -388,10 +379,17 @@ body {
     max-width: 50vw;
   }
   
+  .top-right {
+    top: 15vh;
+    left: 5vw;
+    right: auto;
+  }
+  
   .character.main {
     transform: scale(1);
     left: 50%;
     margin-left: -25%; /* Updated as requested */
+    bottom: -5%;
   }
   
   .character.left {
@@ -399,6 +397,7 @@ body {
     left: 25%;
     margin-left: -30%; /* Updated as requested */
     opacity: 0.6;
+    bottom: -5%;
   }
   
   .character.right {
@@ -406,6 +405,7 @@ body {
     left: 75%;
     margin-left: -35%; /* Updated as requested */
     opacity: 0.6;
+    bottom: -5%;
   }
   
   /* Adjust navigation buttons for better mobile experience */
@@ -610,7 +610,60 @@ body {
 @media (max-width: 480px) {
   .mini-bg {
     width: 90%;
-    height: 60vh;
+    height: 96vh; /* Increased from 60vh by 20% */
+  }
+  
+  .title-text {
+    font-size: 7vw;
+    top: 3vh;
+  }
+  
+  .character {
+    max-width: 60vw;
+  }
+  
+  .character.main {
+    transform: scale(1);
+  }
+  
+  .character.left {
+    transform: scale(0.6);
+    left: 15%;
+  }
+  
+  .character.right {
+    transform: scale(0.6);
+    left: 85%;
+  }
+  
+  /* Ensure the carousel is properly centered */
+  .carousel {
+    width: 100%;
+    left: 0;
+    right: 0;
+    height: 96vh; /* Increased from 80vh by 20% */
+  }
+  
+  /* Adjust navigation buttons */
+  .nav-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+  
+  /* Ensure the send nude button stays visible */
+  .send-nude-btn {
+    bottom: 3vh;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust popovers for mobile */
+  /* Small mobile devices */
+@media (max-width: 480px) {
+  .mini-bg {
+    width: 90%;
+    height: 65vh;
   }
   
   .title-text {
@@ -657,11 +710,30 @@ body {
     font-size: 0.9rem;
   }
   
-  /* Adjust popovers for mobile */
+  /* Make sidebar horizontal for mobile */
+  .sidebar {
+    position: absolute;
+    left: 0;
+    top: 5vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 5px;
+    z-index: 5;
+  }
+  
+  /* Position popovers below menu items */
   .theme-popover,
   .photo-mode-popover,
   .about-popover {
-    left: 100px;
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
     width: 180px;
+    margin-top: 10px;
   }
+}
 }
