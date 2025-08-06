@@ -115,7 +115,7 @@ body {
 }
 
 .character {
-  max-height: 80vh;
+  max-height: 75vh;
   transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease, left 0.8s ease;
   position: absolute;
   max-width: 25vw; /* Giới hạn chiều rộng tối đa */
