@@ -671,16 +671,23 @@ body {
   }
   
   /* Adjust popovers for mobile */
-  /* Small mobile devices */
+  /* Small mobile devices - THIS */
 @media (max-width: 480px) {
   .mini-bg {
     width: 90%;
     height: 65vh;
   }
   
+  .character_name {
+    font-size: 10vw !important;
+    top: -0.5vh !important;
+    width: 100% !important;
+    left: 0 !important;
+  }
+
   .title-text {
     font-size: 7vw;
-    top: 3vh;
+    top: 6vh;
   }
   
   .character {
@@ -748,4 +755,20 @@ body {
     margin-top: 10px;
   }
 }
+}
+.character_name {
+  color: white;
+  font-size: 10vw;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  position: absolute;
+  text-align: center;
+  z-index: 1;
+  top: -3%;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.character_name.changing {
+  opacity: 0;
+  transform: translateY(-10px);
 }

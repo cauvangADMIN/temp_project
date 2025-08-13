@@ -10,7 +10,7 @@
   <section class="hero-section">
     <div class="mini-bg">
       <div class="title-text">Goddess of Victory: Nikke</div>
-
+      <div class="character_name" id="character_name">Character Name</div>
       <div class="carousel" id="carousel"></div>
 
       <button class="nav-btn prev-btn" onclick="prevCharacter()">⟨</button>
@@ -55,6 +55,17 @@
       "assets/images/ecchi-5-removebg-preview.png",
       "assets/images/ecchi-6-removebg-preview.png",
       "assets/images/ecchi-7-removebg-preview.png"
+    ];
+
+    // Character names corresponding to each image
+    const characterNames = [
+      "Scarlet",
+      "Rapunzel",
+      "Neon Blue",
+      "Privaty",
+      "Scarlet",
+      "Helm",
+      "Modernia"
     ];
 
     // Create nude versions of the images by adding _nude before the extension
@@ -132,29 +143,6 @@
       popover.classList.add('active');
     }
 
-    function initCarousel() {
-      const carousel = document.getElementById("carousel");
-      carousel.innerHTML = '';
-      
-      // Create all image elements from the start
-      for (let i = 0; i < images.length; i++) {
-        const img = document.createElement('img');
-        img.src = images[i];
-        img.id = `character-${i}`;
-        img.className = 'character';
-        img.alt = `Character ${i+1}`;
-        img.style.display = 'block';
-        img.style.opacity = 0;
-        carousel.appendChild(img);
-      }
-      
-      // Update initial positions
-      updateCarouselPositions();
-      
-      // Initialize watched counter
-      updateWatchedCounter();
-    }
-
     function updateCarouselPositions() {
       // Đặt lại tất cả các thuộc tính hình ảnh
       for (let i = 0; i < images.length; i++) {
@@ -216,6 +204,16 @@
       }
     }
 
+    function updateCharacterName() {
+      const nameElement = document.getElementById('character_name');
+      nameElement.classList.add('changing');
+      
+      setTimeout(() => {
+        nameElement.textContent = characterNames[current];
+        nameElement.classList.remove('changing');
+      }, 400); // Half the transition time for a smooth crossfade effect
+    }
+
     function nextCharacter() {
       if (isAnimating) return;
       isAnimating = true;
@@ -228,6 +226,7 @@
       
       current = (current + 1) % images.length;
       updateCarouselPositions();
+      updateCharacterName(); // Update character name
       
       // Mark the new current character as watched
       markCharacterAsWatched(current);
@@ -249,6 +248,7 @@
       
       current = (current - 1 + images.length) % images.length;
       updateCarouselPositions();
+      updateCharacterName(); // Update character name
       
       // Mark the new current character as watched
       markCharacterAsWatched(current);
@@ -256,6 +256,33 @@
       setTimeout(() => {
         isAnimating = false;
       }, 800); // Đồng bộ với thời gian transition
+    }
+
+    // Initialize character name when page loads
+    function initCarousel() {
+      const carousel = document.getElementById("carousel");
+      carousel.innerHTML = '';
+      
+      // Create all image elements from the start
+      for (let i = 0; i < images.length; i++) {
+        const img = document.createElement('img');
+        img.src = images[i];
+        img.id = `character-${i}`;
+        img.className = 'character';
+        img.alt = `Character ${i+1}`;
+        img.style.display = 'block';
+        img.style.opacity = 0;
+        carousel.appendChild(img);
+      }
+      
+      // Update initial positions
+      updateCarouselPositions();
+      
+      // Initialize character name
+      document.getElementById('character_name').textContent = characterNames[current];
+      
+      // Initialize watched counter
+      updateWatchedCounter();
     }
 
     // Khởi tạo carousel khi trang tải xong
